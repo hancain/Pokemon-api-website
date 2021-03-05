@@ -1,0 +1,20 @@
+{
+  "name": "cis371-3",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/hancain/cis371-3.git",
+  "author": "Hannah Cain <hcsch18@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "tsc && node dist/main.js",
+    "dev": "parcel src/index.html",
+    "build": "parcel build src/index.html"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "parcel": "^2.0.0-beta.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.2.3"
+  }
+}
