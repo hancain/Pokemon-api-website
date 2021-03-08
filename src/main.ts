@@ -277,15 +277,17 @@ theButton2?.addEventListener("click", () => {
   //if not a number, default 1
   if (isNaN(dexNum)) {
     dexNum = 1;
-    window.alert("That's not a valid number... searching for dex #1");
-  }
-  //if a decimal, default to whole number (round)
+  window.alert("That's not a valid number... searching for dex #1");
+}
+    //if a decimal, default to whole number (round)
   else if (!(dexNum % 1 === 0)) {
     dexNum = Math.floor(dexNum / 1);
     window.alert(
       "Dex numbers are whole numbers... trying to search for #" + dexNum
     );
   }
+    
+
   //if over max, default to max
   if (dexNum > DEXMAX) {
     dexNum = DEXMAX;
