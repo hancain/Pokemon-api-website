@@ -705,6 +705,7 @@ theButton2?.addEventListener("click", () => {
   } //if a decimal, default to whole number (round)
   else if (!(dexNum % 1 === 0)) {
       dexNum = Math.floor(dexNum / 1);
+      console.log("FUCK");
       window.alert("Dex numbers are whole numbers... trying to search for #" + dexNum);
     } //if over max, default to max
 

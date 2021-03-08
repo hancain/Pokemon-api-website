@@ -227,6 +227,7 @@ theButton2 === null || theButton2 === void 0 ? void 0 : theButton2.addEventListe
     //if not a number, default 1
     if (isNaN(dexNum)) {
         dexNum = 1;
+        
         window.alert("That's not a valid number... searching for dex #1");
     }
     //if a decimal, default to whole number (round)
