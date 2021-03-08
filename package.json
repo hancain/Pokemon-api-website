@@ -1,7 +1,7 @@
 {
   "name": "cis371-3",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.html",
   "repository": "https://github.com/hancain/cis371-3.git",
   "author": "Hannah Cain <hcsch18@gmail.com>",
   "license": "MIT",
