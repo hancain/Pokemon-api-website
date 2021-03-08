@@ -12,10 +12,10 @@ var theButton1;
 var theButton2;
 var tableBody;
 //select associated HTML items
-tableBody = document.querySelector("#progOutput table > tbody");
-theInput = document.querySelector("#inputData > input[type=text]");
-theButton1 = document.querySelector("#btn1");
-theButton2 = document.querySelector("#btn2");
+tableBody = document === null || document === void 0 ? void 0 : document.querySelector("#progOutput table > tbody");
+theInput = document === null || document === void 0 ? void 0 : document.querySelector("#inputData > input[type=text]");
+theButton1 = document === null || document === void 0 ? void 0 : document.querySelector("#btn1");
+theButton2 = document === null || document === void 0 ? void 0 : document.querySelector("#btn2");
 /*
     Inputs
 */
@@ -232,7 +232,6 @@ theButton2 === null || theButton2 === void 0 ? void 0 : theButton2.addEventListe
     //if a decimal, default to whole number (round)
     else if (!(dexNum % 1 === 0)) {
         dexNum = Math.floor(dexNum / 1);
-        console.log("FUCK");
         window.alert("Dex numbers are whole numbers... trying to search for #" + dexNum);
     }
     //if over max, default to max
