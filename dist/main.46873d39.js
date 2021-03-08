@@ -697,7 +697,7 @@ theButton2?.addEventListener("click", () => {
   } //convert input to numerical, integer value
 
 
-  let dexNum = Number(theInput?.value); //if not a number, default 1
+  let dexNum = Number(theInput?.value);
 
   if (isNaN(dexNum)) {
     dexNum = 1;

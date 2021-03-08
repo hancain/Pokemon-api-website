@@ -12,10 +12,10 @@ var theButton1;
 var theButton2;
 var tableBody;
 //select associated HTML items
-tableBody = document === null || document === void 0 ? void 0 : document.querySelector("#progOutput table > tbody");
-theInput = document === null || document === void 0 ? void 0 : document.querySelector("#inputData > input[type=text]");
-theButton1 = document === null || document === void 0 ? void 0 : document.querySelector("#btn1");
-theButton2 = document === null || document === void 0 ? void 0 : document.querySelector("#btn2");
+tableBody = document.querySelector("#progOutput table > tbody");
+theInput = document.querySelector("#inputData > input[type=text]");
+theButton1 = document.querySelector("#btn1");
+theButton2 = document.querySelector("#btn2");
 /*
     Inputs
 */
