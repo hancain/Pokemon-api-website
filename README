@@ -1,0 +1,373 @@
+#Preparation
+1) Install a JSON formatter extension for your browser.
+  - If you are using Chrome, use the top menu Window => Extensions
+  - If you are using Firefox, use the top menu Tools => Add-ons
+There may be several choices of such extensions, pick one of your preference. These extensions allow you to browse a JSON (JavaScript Object Notation) string in "pretty formatted", so it is easier for you to understand the entire structure of the JSON data.
+2) Try the Dog API above one more time, this time after you have a JSON formatter extension installed.
+
+In this exercise you will use the fetch() function (or the Axios library) from a TypeScript program to access a web service and parse the JSON response returned by the web server.
+  WARNING
+  STOP HERE if you don't have a JSON formatter installed on your browser. The extension will help you significantly in writing your code.
+
+#Overview
+This exercise will guide you through building a simple web app using HTML, CSS, and TypeScript that allows your user to supply some input that will control the data shown in the page. Using the Dog API above as an example, the web app may provide an input for the user to type a favorite breed and clicking a "Search" button will show dog data relevant to that particular breed.
+The actual implementation of the user input is not limited to a simple input field and a button as described above. Instead, it would depend on the WebAPI you picked as the data source for this assignment.
+
+#Study Your API
+After finalizing your web API selection, read its documentation to learn more about various data items provided by the API. For instance, a Movie API, may provide several URLs for fetching data on actors, movie details, shows, etc.
+Despite your specific choice of Web API, they all follow a common pattern for using the API:
+  - All the URLs from a particular Web API share the same host (https://dog.ceo in our example above)
+  - Additional information for fetching specific data items from the API is encoded in either the URL path or the URL query string.
+For instance, the Dog API (opens new window)encodes the breed in its URL path:
+  - https://dog.ceo/api/breed/hound/images
+  - https://dog.ceo/api/breed/terrier/images
+but the Cat API (opens new window)encodes the breed in its query string:
+  - https://api.thecatapi.com/v1/images/search?breed_ids=beng
+  - https://api.thecatapi.com/v1/images/search?breed_ids=siam
+Be sure you understand the details how to form the correct requests.
+Occasionally, a Web API may require you use POST (instead of GET) and provide additional information (like apiKey or access token) for accessing the data in the Request body (instead of URL path or URL query string as describe above). Again, learn all these details from the documentation of your Web API.
+
+1) After reading the documentation and learn the details about specifying the requests, try some of those URLs on your browser (by typing the URL itself in your browser input box). When the correct URL is used you should see the JSON response on your browser canvas.
+
+  WARNING
+  experimenting from the browser input can only be done for GET requests. If particular subcommands in your API require a POST request, you must install additional browser extensions such as REST client (opens new window)(for Chrome) or REST client (opens new window)(for FireFox).
+
+#Prepare the Project Directory
+  TIP
+  The instructions below are shown using yarn, if you prefer to use npm use the instructions from previous assignment to find the equivalent commands in npm
+
+2) Create a new directory for this exercise (do not create this directory inside another directory of a previous exercise)
+3) Initialize it for a NodeJS project
+  yarn init -y
+  
+  TIP
+  When you open package.json in VSCode you may see a warning that the package name use lowercase and alphanumeric characters only. Fix it as necessary.
+
+4) Add Axios (opens new window)and ParcelJS (opens new window)as new dependencies:
+  yarn global add parcel-bundler    # only if not installed yet
+  yarn add axios
+
+  WARNING
+  Some Windows user reported that they were getting Invalid Version: undefined error. If you happened to be one of these unlucky users, please try ParcelJS version 2.x (alpha release):
+    yarn add parcel@next
+    # or install it globally
+    yarn global add parcel@next
+
+5) Insert the following (sample) statements into src/main.ts to fetch data about Siamese cats 🐈 :
+  import axios, {AxiosResponse} from "axios";
+  const catURL = "https://api.thecatapi.com/v1/images/search";
+  axios
+    .get(catURL, {
+      params: {
+        breed_ids: "siam",
+      },
+    })
+    .then((r: AxiosResponse) => r.data)
+    .then((breeds: any[]) => {
+      console.log(breeds);
+    });
+
+  TIP
+  The import line above uses two different syntax variants:
+    - Default import (import axios): when the external library exports the identifier (variable/const/function/type) using export default
+    - Named import (import {AxiosResponse}): when the external library exports the identifier using a specific name.
+  With a default import your code may refer to the exported identifier using an identifier name of your choice, but you can't do this with a named export. So the following snippet will work as well:
+    import lolCat, {AxiosResponse} from "axios";
+    
+    lolCat.get("https://.....")
+  but AxiosResponse must be imported as is.
+
+6) Create tsconfig.json at the TOP of your project directory (parent directory of src) and insert the following settings:
+  {
+    "compilerOptions": {
+      "lib": ["ES2015", "DOM"],
+      "outDir": "dist",
+      "strictNullChecks": true
+    },
+    "include": ["src/main.ts"]
+  }
+  
+  TIP
+  Some students got compile errors and the issues were fixed by adding the lib option above. Depending on your computer settings this option may not be needed.
+  With the above settings, running tsc from your command prompt will automatically compile src/main.ts and saved the compiled as dist/main.js.
+
+7) Insert the following scripts into package.json:
+  "scripts": {
+    "start": "tsc && node dist/main.js
+  }
+8) Run the script to see the output from your TS code on your console/terminal/command prompt:
+  yarn start
+Compare the output from your TS code with the output when you type the same URL from the browser input box.
+
+#Using Data from Web APIs
+1) Customize the sample main.ts for the API of your choice.
+  
+  WARNING
+  The JSON response from the Cat API is an array of something, hence breeds is the second .then clause is declared as:
+    .then((breeds: any[]) => {/* code */})
+  If the JSON response of your favorite API is an object, change the fat arrow function declaration accordingly to something like:
+    .then((myData: any) => {/* code */}
+    
+As a comparison, when fetching data from the sample Dog API above, you would modify the code to the following:
+  axios.get("https://dog.ceo/.......")
+    .then((r:AxiosResponse) => r.data)
+    .then((dogData:any) => {
+      console.log(dogData); // Access the entire response
+      // or
+      console.log(dogData.message) // Access only part of the response
+    })
+Be sure you understand that the field message is specific to the Dog API. You have to read the actual documentation of your favorite API to understand the structure of its JSON responses.
+2) Add more code in src/main.ts to tinker with the actual data by using lots of console.log() to extract various parts of the JSON response of your interest and familiarize yourself with the API before moving on to the next step below. Open the console tab of your browser Web DevTool to inspect the output.
+  
+  TIP
+  For now, this is a recommended debugging practice before you learn how to use the Web DevTool debugger (explained below).
+
+3) Create an empty src/index.html, then place the cursor at the very beginning of the blank document, and press !+Tab to let VSCode generate an HTML5 template.
+4) Add two <section>s in the HTML body: one for user input and one for the program "output". You may replace the IDs below to your personal preference
+  <body>
+    <section id="userInput"></section>
+    <section id="progOutput"></section>
+  </body>
+The overall basic design is to designate one section for user input (input files, radio buttons, checkboxes, pulldown menu, buttons, etc.) to allow user control over data to pull from the Web API and the other for your TS code to generate dynamic output.
+5) Add a text input field and a button under the user input section:
+  <section id="userInput">
+    <input type="text">
+    <button>Go</button>
+  </section>
+6) Add more code in src/main.ts to setup a button click listener and inspect the input text entered by the user:
+  let theInput: HTMLInputElement | null;
+  let thebutton: HTMLButtonElement | null;
+  theInput = document.querySelector("#userInput > input[type=text]");
+  theButton = document.querySelector("#userInput > button");
+
+  theButton?.addEventListener("click", () => {
+    const inputLen = theInput?.value.length ?? 0;
+    if (inputLen > 0)  
+      console.log("You entered", theInput?.value);
+    else
+      console.log("Please enter some text");
+  });
+7) Edit src/index.html so your TS script is loaded correctly into the HTML document.
+8) The two new subcommands under the "scripts" in package.json:
+  "scripts" : {
+    "start": "tsc && node dist/main.js",    // existing subcommand
+    "dev": "parcel src/index.html",
+    "build": "parcel build src/index.html"
+  }
+9) Use ParcelJS to launch your local server:
+  yarn dev
+Open localhost:1234 (or whatever port number directed by ParcelJS) from your browser.
+10) In your browser page (with the DevTool opened), enter some text into the input field and click the "Go" button. Verify that you see the correct output in your Web console (the "Console" tab of your Web DevTool)
+
+#Using the Browser Builtin Debugger
+Your Web DevTools include a powerful debugger that will help you diagnose issues when your application is not working as expected.
+11) With your Web DevTools opened, switch to the "Debugger" tab (FireFox) or the "Sources" tab (Chrome). You should see the following window arrangement (the following screenshot is captured from FireFox, but Chrome follows a similar layout):
+If the navigation panel is hidden, just click the hide/show button to bring it to view.
+12) The Navigation panel on the left should show a (partial) directory structure similar to what you have in your project directory: currently it is showing node_modules and src. The four buttons on the upper right side (in the blue rectangles) are debug control buttons in the following order:
+  - Run/Resume
+  - Step Over (execute one instruction at a time)
+  - Step Into (execute and follow/dive into a function call)
+  - Step Out (complete the current function and return to its caller)
+13) Select src/main.ts from the navigation panel and set two breakpoints (as shown) by clicking on the line number. Breakpoints will toggle by clicking them again a second time.
+14) With the DevTools opened and breakpoints set, click the reload button at the top of your browser. This should restart and stop your program at the first breakpoint. While the execution of your program is being paused in this manner, hover your mouse over one the variables to show its current value. Alternatively, you can also inspect all the variables under the "Scope" panel (not visible in the screenshot) below the "(Call) Stack" panel.
+15) Try all the debugger control buttons and familiarize yourself with using the debugger and inspecting the program variables. This would be a more convenient and elegant way to debug your program, other that using traditional console.log() throughout your code.
+  
+  TIP
+  The instructor expects you master the skill on using the debugger. Instead of saying "I don't know why my program did not work" when you ask for your instructor's help, you can now say "I don't know why my variable xyz has this value when I expect a different value".
+
+#Completing the CatAPI Example (Optional)
+If you are confident enough to go straight to your favorite API, you may skip this section. Otherwise, this section should give step-by-step instructions how to combine user input into the fetch requests. In the following example, we will pull a list of cat breeds as many as requested by the user. In order to make sense of the code below, you have to read the Cat API documentation (opens new window).
+Cat API
+Two important information from the screenshot above:
+  - The URL is https://api.thecatapi.com/v1/breeds
+  - You may include three query parameters, but in the sample below, we use only one (limit)
+The steps listed below intentionally do not include specifics about file names, which file(s) to edit, or the exact location to insert the provided snippet in the code. By this time, you are expected to be able to figure out these missing details yourself.
+16) In the button listener function, verify that the user enters a valid number, use a default value otherwise.
+  let breedLimit = Number(theInput?.value); // convert string to number
+  // NaN = Not a Number
+  if (isNaN(breedLimit)) breedLimit = 10;
+17) Include the breedLimit in the query parameter.
+  const catURL = "https://api.thecatapi.com/v1/breeds";
+  axios
+    .get(catURL, {
+      params: {
+        limit: breedLimit,
+      },
+    })
+    .then((r: AxiosResponse) => r.data)
+    .then((breeds: any[]) => {
+    })
+18) To practice working with typed data, let's create a new interface and avoid working with any[] in the above snippet. Out of many data fields returned by the Cat API we are interested only in the following fields:
+  interface MeowPic {
+    url: string
+  }
+  interface Meow {
+    name: string,
+    description: string,
+    image: MeowPic
+  }
+Alternatively, you can combine the two interfaces into one:
+  interface Meow {
+    name: string,
+    description: string,
+    image: {
+      url: string
+    }
+  }
+19) Use Array.map() to convert any[] to Meow[] and return it as a JS Promise for the next .then() in the chain:
+  axios
+    .get(_____)
+    .then((r: AxiosResponse) => r.data)
+    .then((breeds: any[]) => {
+      const meowArr = breeds.map(
+        (b: any): Meow => {
+          return {
+            name: b.name,
+            description: b.description,
+            image: b.image,
+          };
+        }
+      );
+      return meowArr;
+    })
+    .then((meows: Meow[]) => {/* more code */})
+Within the last then in the above snippet, our incoming array now has the correct type: array of Meow objects.
+20) Prepare the HTML to have a placeholder for an empty table for displaying the list of cat breeds.
+  <section id="progOutput">
+    <table>
+      <tbody>
+        <!-- this part will be filled from code -->
+      </tbody>
+    </table>
+  </section>
+21) Use querySelector to get a reference to the table body:
+  let tableBody: HTMLTableSectionElement | null;
+  tableBody = document.querySelector("#progOutput table > tbody");
+The code in the next step is supposed to build the table where one the cells in each row is an image. Since you already learned how to create a table showing mainly textual data in a previous exercise, inserting an image into a table cell follows a similar pattern. Essentially, instead of targeting for the following DOM structure:
+  <tr><td>Your text here</td></tr>
+we want to create the following DOM structure:
+  <tr><td><img src="Your-image-url-here"></td></tr>
+So, in place a text node, we want to insert an <img> as a child of <td>.
+22) In the last .then clause above use a loop to add the images into the table.
+  .then((meows: Meow[]) => {
+    meows.forEach((m:Meow) => {
+      // only the code to create the images are shown below
+      // you should be able to figure out the missing code to
+      // insert the image into a table cell
+      const catImage: HTMLImageElement = document.createElement("img");
+      catImage.setAttribute("src", m.image.url);
+    })
+  })
+Reload the page and if you did everything correctly, you will see the cat images are huge since we don't have a CSS to customize their presentation style.
+
+#Add CSS Styles
+23) Add the following CSS rule to constrain the width of the cat images:
+  #progOutput tbody img {
+    max-width: 128px;
+  }
+24) Add more CSS rules to beautify your table presentation
+
+#Fix the Bug
+Try the following experiment:
+  - Reload the page
+  - Enter 5 to fetch five breeds from the Cat API your table should show five rows of data.
+  - Then, enter 2 to fetch two breeds; your table should show only two rows, but instead it shows a total of 7 rows.
+The issue: The data from the previous fetch were not removed when the user asked for a new data
+25) Use querySelectorAll() to get a list of existing data rows in the table and use a loop to remove them. You should be able to figure out where to insert the following snippet.
+  let oldRows: NodeListOf<HTMLTableRowElement> | undefined;
+  oldRows = tableBody?.querySelectorAll("tr");
+  if (oldRows) {
+    for (let k = 0; k < oldRows?.length; k++) {
+      const oldOne = oldRows[k];
+      tableBody?.removeChild(oldOne);
+    }
+  }
+  
+#CSS3 Grid for Page Layout
+26) Add a new <div> with ID topContainer to host the two existing <section>s. In addition insert heading of your choice to display the page title. The overall structure of your HTML elements under <body> should now look like the following:
+  <body>
+    <div id="topContainer">
+      <h2 id="pageTitle">List of Cat Breeds</h2>
+      <section id="userInput">
+        <!-- more contents here -->
+      </section>
+      <section id="progOutput">
+        <!-- more contents here -->
+      </section>
+    </div>
+  </body>
+  
+  TIP
+  Before moving on to the next step, be sure you have the correct HTML structure as described above, i.e. the topContainer <div> is the immediate parent of the following three children:
+    - <h2> is the first child
+    - <section id=userInput> is the second child
+    - <section id=progOutput> is the third child
+  The Grid layout (opens new window)you are about to apply in the next few steps works only if the above four nodes have the correct parent-child relationship
+
+27) To facilitate debugging layout issues, let's apply border color and different background colors to these four nodes:
+  #topContainer {
+    border: 2px solid red;
+  }
+  #pageTitle {
+    background-color: forestgreen;
+  }
+  #userInput {
+    background-color: orange;
+    }
+  #progOutput {
+    background-color: brown;
+  }
+The CSS Grid layout (opens new window)is a CSS3 feature for arranging contents into a flexible 2D grid. In our case, the major contents consist of these three groups above which can be arranged into either a 1x3 grid, 2x2 grid, or 3x1 grid. For this exercise, we will adopt the 2x2 grid (table):
+  - The page title will occupy the entire first row
+  - The table of cat breeds will occupy the second row, first column
+  - The user input (and button) will occupy the second row, second column
+28) The "shape" of the grid must be defined in the parent node (#topContainer in our case). Therefore, the following CSS rule is required (instead of creating a new rule, combine the two properties below with the other existing properties for #topContainer)
+  #topContainer {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    grid-template-areas: 
+      "header header"
+      "catdata control";
+  }
+Essentially:
+  - the first two properties defines a 2-column "table"/grid whose width proportions are 80%:20%.
+  - the third property assign a unique name (of your choice) to each of the four cells in the grid. The arrangement of these names must match the intended shape of the grid (2x2). This is why you see two groups of strings with each group consists of two names. Had the shape of the table been chosen to be 2x3, then the cell names may have been defined as follows:
+    grid-template-areas: 
+      "topNav header header"
+      "catdata control errorMsg";
+When adjacent cells are assigned the name area name, a single HTML node will span across those adjacent cells. In our case, the page title will span across the entire first row of the 2x2 grid.
+
+29) To designate each node to occupy a particular named cell, add the grid-area property to the three children above:
+  #pageTitle {
+    grid-area: header;
+  }
+  #progOutput {
+    grid-area: catdata;
+  }
+  #userInput {
+    grid-area: control;
+  }
+  
+  TIP
+  In addition to the three sections shown above, you may add more areas to the page.
+
+#Program Specifications
+Use the Cat API example above as the minimum set of features to implement.
+1) Pick a web service of your interest, but look for one that supports JSON response
+2) Provide two (or more) user inputs to control what specific information to pull from the web API. You may use other input types (opens new window)(besides a simple text field) to get user input.
+3) Allow the user to select two or more categories of data from your favorite web service.
+4) Present the data in a table format (3 columns or more).
+5) Your program should be able to handle common errors and show appropriate message on the page. Errors such as (but not limited to):
+  - user enters incorrect/invalid input
+  - the Web service does not return any data that matches user selections or returns an HTTP response with status code 3xx, 4xx, or 5xx. Be sure to read the documentation of your selected web service to understand how error conditions are conveyed to the client program.
+6) Arrange the overall layout of the page using CSS grid. Reserve one of the areas/cells in the grid for showing error messages. Use the setTimeout() function to automatically clear the error message after a few seconds of delay.
+
+  TIP
+  There are multiple techniques to "remove" a textual content from your HTML document:
+    - physically remove the text element (using removeChild())
+    - set the text content to an empty string
+    - apply a CSS class whose effect is changing the visibility of the text element.
+7) Overall presentation style (CSS) of the data
+  - Apply a unique style to each "section" of the CSS grid layout to provide clear visual cues to the user.
+  - Apply border or background color to the table cells so the boundary between two adjacent cells is easily identified (i.e. the table data cells do not "blur" into one giant rectangular area)
+  - Use the :hover pseudo class on the table rows to change the presentation style of a particular row when the mouse hovers over that row.
